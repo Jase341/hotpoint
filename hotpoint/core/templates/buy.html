@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buy Voucher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .pricing-button {
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="container mt-5">
+    <h2 class="mb-4">Buy Internet Voucher</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="w-50 mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Phone Number (e.g. 2547XXXXXXXX)</label>
+            <input type="text" name="phone" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Select Plan</label>
+            <div class="btn-group-vertical w-100" role="group">
+                {% for plan in plans %}
+                    <button type="submit" name="amount" value="{{ plan.amount }}" class="btn btn-outline-primary pricing-button">
+                        {{ plan.amount }} KES - {{ plan.duration_minutes }} minutes
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Pay with M-Pesa</button>
+    </form>
+
+    <h4 class="mt-5">Pricing Table</h4>
+    <table class="table table-bordered w-50">
+        <thead>
+            <tr>
+                <th>Amount (KES)</th>
+                <th>Duration (Minutes)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plan in plans %}
+                <tr>
+                    <td>{{ plan.amount }}</td>
+                    <td>{{ plan.duration_minutes }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

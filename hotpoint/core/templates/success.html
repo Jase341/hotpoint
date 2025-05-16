@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f9;
+            padding: 40px;
+            text-align: center;
+        }
+        .success-box {
+            background: white;
+            padding: 30px;
+            margin: auto;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #27ae60;
+        }
+        .info {
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .info strong {
+            display: inline-block;
+            width: 140px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <h2>Payment Successful!</h2>
+
+        {% if voucher_code %}
+            <div class="info"><strong>Voucher Code:</strong> {{ voucher_code }}</div>
+        {% endif %}
+
+        {% if username %}
+            <div class="info"><strong>Hotspot Username:</strong> {{ username }}</div>
+        {% endif %}
+
+        {% if password %}
+            <div class="info"><strong>Hotspot Password:</strong> {{ password }}</div>
+        {% endif %}
+
+        {% if duration %}
+            <div class="info"><strong>Access Duration:</strong> {{ duration }} minutes</div>
+        {% endif %}
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

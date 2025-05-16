@@ -1,1 +1,1 @@
-web: gunicorn hotpoint.wsgi --log-file -
+web: gunicorn hotpoint.wsgi --chdir hotpoint/hotpoint --log-file -

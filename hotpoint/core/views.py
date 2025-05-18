@@ -254,19 +254,34 @@ def buy_view(request):
 # Callback from InstaSend API after payment
 @csrf_exempt
 def instasend_callback(request):
-    data = json.loads(request.body.decode("utf-8"))
-    print("[InstaSend Callback Received]", json.dumps(data, indent=2))
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+
     try:
-        if data['status'] == 'success':
-            phone = data['phone_number']
-            amount = data['amount']
+        body_unicode = request.body.decode("utf-8")
+        if not body_unicode:
+            return JsonResponse({"error": "Empty request body"}, status=400)
+
+        data = json.loads(body_unicode)
+        print("[InstaSend Callback Received]", json.dumps(data, indent=2))
+
+        if data.get('status') == 'success':
+            phone = data.get('phone_number')
+            amount = data.get('amount')
             print(f"[Payment Successful] Phone: {phone}, Amount: {amount}")
             authorize_user(phone, amount)
         else:
-            print(f"[Payment Failed] Status: {data['status']}")
+            print(f"[Payment Failed] Status: {data.get('status')}")
+
+        return JsonResponse({"Result": "Callback processed"})
+
+    except json.JSONDecodeError:
+        print("[Callback Error] Invalid JSON format")
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
     except Exception as e:
         print("[Callback Error]", e)
-    return JsonResponse({"Result": "Callback processed"})
+        return JsonResponse({"error": "Server error"}, status=500)
 
 # Generate random voucher code
 def generate_code(length=8):

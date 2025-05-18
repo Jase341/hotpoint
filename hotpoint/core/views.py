@@ -254,35 +254,39 @@ def buy_view(request):
 # Callback from InstaSend API after payment
 @csrf_exempt
 def instasend_callback(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+    if request.method == "GET":
+        # For debugging or fallback only — not secure or standard
+        return JsonResponse({"message": "GET request received. No data processed."})
 
-    try:
-        body_unicode = request.body.decode("utf-8")
-        if not body_unicode:
-            return JsonResponse({"error": "Empty request body"}, status=400)
+    elif request.method == "POST":
+        try:
+            body_unicode = request.body.decode("utf-8")
+            if not body_unicode:
+                return JsonResponse({"error": "Empty request body"}, status=400)
 
-        data = json.loads(body_unicode)
-        print("[InstaSend Callback Received]", json.dumps(data, indent=2))
+            data = json.loads(body_unicode)
+            print("[InstaSend Callback Received]", json.dumps(data, indent=2))
 
-        if data.get('status') == 'success':
-            phone = data.get('phone_number')
-            amount = data.get('amount')
-            print(f"[Payment Successful] Phone: {phone}, Amount: {amount}")
-            authorize_user(phone, amount)
-        else:
-            print(f"[Payment Failed] Status: {data.get('status')}")
+            if data.get('status') == 'success':
+                phone = data.get('phone_number')
+                amount = data.get('amount')
+                print(f"[Payment Successful] Phone: {phone}, Amount: {amount}")
+                authorize_user(phone, amount)
+            else:
+                print(f"[Payment Failed] Status: {data.get('status')}")
 
-        return JsonResponse({"Result": "Callback processed"})
+            return JsonResponse({"Result": "Callback processed"})
 
-    except json.JSONDecodeError:
-        print("[Callback Error] Invalid JSON format")
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
+        except json.JSONDecodeError:
+            print("[Callback Error] Invalid JSON format")
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-    except Exception as e:
-        print("[Callback Error]", e)
-        return JsonResponse({"error": "Server error"}, status=500)
+        except Exception as e:
+            print("[Callback Error]", e)
+            return JsonResponse({"error": "Server error"}, status=500)
 
+    else:
+        return JsonResponse({"error": "Unsupported HTTP method"}, status=405)
 # Generate random voucher code
 def generate_code(length=8):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))

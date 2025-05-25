@@ -136,7 +136,7 @@ INTASEND_PUBLIC_KEY = settings.INSTASEND_PUBLIC_KEY
 INTASEND_SECRET_KEY = settings.INSTASEND_SECRET_KEY
 
 def initiate_stk_push(phone, amount):
-    url = "https://api.instasend.io/api/v1/payments/stkpush"
+    url = 'https://api.intasend.com/api/v1/payment/mpesa-stk-push/'
     headers = {
         "Authorization": f"Bearer {INTASEND_SECRET_KEY}",
         "Content-Type": "application/json"

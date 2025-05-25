@@ -131,7 +131,7 @@ INSTASEND_SECRET_KEY = 'ISSecretKey_live_ccd5df89-ae1f-4a7a-bc23-bc38ded5c43b'
 
 
 MIKROTIK_HOST = '192.168.88.1'  # IP address of your MikroTik router
-MIKROTIK_USERNAME = 'api_user'     # Your MikroTik username
+MIKROTIK_USERNAME = 'admin'     # Your MikroTik username
 MIKROTIK_PASSWORD = 'Admin@123' 
 
 MPESA_ENVIRONMENT = 'production'  # change to 'production' later
